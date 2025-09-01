@@ -1,0 +1,1537 @@
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title> Plan • SHIVAM — AI Study Assistants</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Modern professional color scheme */
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1b3a 50%, #2d1b4e 100%);
+      min-height: 100vh;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .card-gradient {
+      background: linear-gradient(145deg, #1e1b4b 0%, #312e81 100%);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+    
+    .tag {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      border: 1px solid transparent;
+      backdrop-filter: blur(10px);
+    }
+    
+    /* Vibrant subject colors */
+    .c101{background: linear-gradient(135deg, #059669, #10b981); color: white; border-color: #059669;}
+    .c103{background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; border-color: #f59e0b;}
+    .c105{background: linear-gradient(135deg, #3b82f6, #60a5fa); color: white; border-color: #3b82f6;}
+    .c107{background: linear-gradient(135deg, #ec4899, #f472b6); color: white; border-color: #ec4899;}
+
+    /* Enhanced animations */
+    .card {
+      background: rgba(30, 27, 75, 0.7);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+      transition: left 0.6s ease;
+    }
+    
+    .card:hover::before {
+      left: 100%;
+    }
+    
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.4);
+      border-color: rgba(139, 92, 246, 0.6);
+    }
+
+    /* Chat Modal Styling */
+    #chat-modal-backdrop {
+      transition: opacity 0.3s ease-in-out;
+      backdrop-filter: blur(8px);
+    }
+    
+    #chat-modal {
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+      background: rgba(30, 27, 75, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+    
+    /* Spinner animation */
+    .loader {
+      border: 4px solid rgba(139, 92, 246, 0.2);
+      border-top: 4px solid #8b5cf6;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Timeline styles */
+    .timeline-item .timeline-dot {
+      position: absolute;
+      left: -29px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 3px solid #4c1d95;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+    }
+    
+    .timeline-item.completed .timeline-dot { 
+      background: linear-gradient(135deg, #059669, #10b981);
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+    }
+    
+    .timeline-item.current .timeline-dot { 
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+      animation: pulse 2s infinite;
+    }
+    
+    .timeline-item.future .timeline-dot { 
+      background: linear-gradient(135deg, #6b7280, #9ca3af);
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    /* Glassmorphism effects */
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Button hover effects */
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+
+
+  <header class="bg-slate-800/50 backdrop-blur-lg border-b border-slate-700 text-white sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto p-4 flex justify-between items-center">
+      <div>
+        <h1 class="text-xl font-bold tracking-tight text-slate-100">IIT Patna CSDA/AICS </h1>
+        <p class="text-sm text-slate-400 mt-1"> Organized in advance by SHIVAM</p>
+      </div>
+      <nav class="hidden md:flex items-center space-x-1">
+        <a href="#timetable" class="px-3 py-2 rounded-md hover:bg-slate-700 transition-colors font-medium">Timetable</a>
+        <a href="#calendar" class="px-3 py-2 rounded-md hover:bg-slate-700 transition-colors font-medium">Calendar</a>
+        <a href="#progress" class="px-3 py-2 rounded-md hover:bg-slate-700 transition-colors font-medium">Progress</a>
+        <a href="#prep-plan" class="px-3 py-2 rounded-md hover:bg-slate-700 transition-colors font-medium">Prep Plan</a>
+        <a href="#materials" class="px-3 py-2 rounded-md hover:bg-slate-700 transition-colors font-medium">Materials</a>
+        <a href="#ai" class="px-3 py-2 rounded-md hover:bg-slate-700 transition-colors font-medium">AI Assistants</a>
+        <a href="https://cet.iitp.ac.in/moodle/login/index.php" target="_blank" class="px-3 py-2 rounded-md bg-blue-600 hover:bg-blue-500 transition-colors font-medium">Moodle Login</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobile-menu-button" class="text-white focus:outline-none">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div id="mobile-menu" class="hidden md:hidden bg-slate-800 p-4">
+      <a href="#timetable" class="block py-2 px-3 rounded-md hover:bg-slate-700">Timetable</a>
+      <a href="#calendar" class="block py-2 px-3 rounded-md hover:bg-slate-700">Calendar</a>
+      <a href="#progress" class="block py-2 px-3 rounded-md hover:bg-slate-700">Progress</a>
+      <a href="#prep-plan" class="block py-2 px-3 rounded-md hover:bg-slate-700">Prep Plan</a>
+      <a href="#materials" class="block py-2 px-3 rounded-md hover:bg-slate-700">Materials</a>
+      <a href="#ai" class="block py-2 px-3 rounded-md hover:bg-slate-700">AI Assistants</a>
+      <a href="https://cet.iitp.ac.in/moodle/login/index.php" target="_blank" class="block py-2 px-3 rounded-md bg-blue-600 hover:bg-blue-500 mt-2">Moodle Login</a>
+    </div>
+  </header>
+
+  
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSDA Visual Timetable</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1b3a 50%, #2d1b4e 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899, #ef4444);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+        }
+        
+        .header h2 {
+            font-size: 1.5rem;
+            margin: 10px 0;
+            color: #c084fc;
+            font-weight: 500;
+        }
+        
+        .header h3 {
+            font-size: 1.2rem;
+            margin: 0;
+            color: #22d3ee;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .timetable-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .day-card {
+            background: rgba(30, 27, 75, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid;
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .day-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .day-card:hover::before {
+            left: 100%;
+        }
+        
+        .day-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 25px 50px rgba(139, 92, 246, 0.4);
+        }
+        
+        /* Day-specific colors */
+        .monday { border-color: #8b5cf6; }
+        .tuesday { border-color: #ec4899; }
+        .wednesday { border-color: #ef4444; }
+        .thursday { border-color: #8b5cf6; }
+        .friday { border-color: #ec4899; }
+        .saturday { border-color: #ef4444; }
+        .sunday { border-color: #6b7280; }
+        
+        .monday:hover { border-color: #a855f7; box-shadow: 0 25px 50px rgba(139, 92, 246, 0.5); }
+        .tuesday:hover { border-color: #f472b6; box-shadow: 0 25px 50px rgba(236, 72, 153, 0.5); }
+        .wednesday:hover { border-color: #f87171; box-shadow: 0 25px 50px rgba(239, 68, 68, 0.5); }
+        .thursday:hover { border-color: #a855f7; box-shadow: 0 25px 50px rgba(139, 92, 246, 0.5); }
+        .friday:hover { border-color: #f472b6; box-shadow: 0 25px 50px rgba(236, 72, 153, 0.5); }
+        .saturday:hover { border-color: #f87171; box-shadow: 0 25px 50px rgba(239, 68, 68, 0.5); }
+        
+        .day-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .monday .day-title { color: #a855f7; }
+        .tuesday .day-title { color: #f472b6; }
+        .wednesday .day-title { color: #f87171; }
+        .thursday .day-title { color: #a855f7; }
+        .friday .day-title { color: #f472b6; }
+        .saturday .day-title { color: #f87171; }
+        .sunday .day-title { color: #9ca3af; }
+        
+        .day-card:hover .day-title {
+            transform: scale(1.05);
+            text-shadow: 0 0 20px currentColor;
+        }
+        
+        .class-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            padding: 12px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .class-item:hover {
+            transform: translateX(8px) scale(1.02);
+        }
+        
+        .time-indicator {
+            width: 6px;
+            height: 100%;
+            border-radius: 3px;
+            margin-right: 16px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        .time-slot {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-right: 12px;
+            min-width: 100px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .subject-tag {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-right: 8px;
+            color: white;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .subject-tag:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .class-details {
+            flex: 1;
+            text-align: left;
+            margin-left: 20px;
+        }
+        
+        .class-name {
+            font-weight: 600;
+            color: #e2e8f0;
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+        
+        /* Subject-specific colors */
+        .cda101 {
+            background: linear-gradient(135deg, #059669, #10b981);
+            border-left: 4px solid #059669;
+        }
+        .cda101 .time-indicator { background: linear-gradient(135deg, #059669, #10b981); }
+        .cda101 .class-item { background: rgba(5, 150, 105, 0.1); border-left: 3px solid #10b981; }
+        
+        .cda103 {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            border-left: 4px solid #f59e0b;
+        }
+        .cda103 .time-indicator { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+        .cda103 .class-item { background: rgba(245, 158, 11, 0.1); border-left: 3px solid #fbbf24; }
+        
+        .cda103-lab {
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+            border-left: 4px solid #d97706;
+        }
+        .cda103-lab .time-indicator { background: linear-gradient(135deg, #d97706, #f59e0b); }
+        .cda103-lab .class-item { background: rgba(217, 119, 6, 0.15); border-left: 3px solid #f59e0b; }
+        
+        .cda105 {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+            border-left: 4px solid #3b82f6;
+        }
+        .cda105 .time-indicator { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+        .cda105 .class-item { background: rgba(59, 130, 246, 0.1); border-left: 3px solid #60a5fa; }
+        
+        .cda105-lab {
+            background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+            border-left: 4px solid #1d4ed8;
+        }
+        .cda105-lab .time-indicator { background: linear-gradient(135deg, #1d4ed8, #3b82f6); }
+        .cda105-lab .class-item { background: rgba(29, 78, 216, 0.15); border-left: 3px solid #3b82f6; }
+        
+        .cda107 {
+            background: linear-gradient(135deg, #ec4899, #f472b6);
+            border-left: 4px solid #ec4899;
+        }
+        .cda107 .time-indicator { background: linear-gradient(135deg, #ec4899, #f472b6); }
+        .cda107 .class-item { background: rgba(236, 72, 153, 0.1); border-left: 3px solid #f472b6; }
+        
+        .no-classes {
+            text-align: center;
+            color: #94a3b8;
+            font-style: italic;
+            padding: 40px 20px;
+            background: rgba(148, 163, 184, 0.05);
+            border-radius: 12px;
+            border: 2px dashed #475569;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .timetable-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .day-card {
+                padding: 20px;
+            }
+        }
+        
+        /* Glowing effects */
+        .day-card:hover .subject-tag {
+            box-shadow: 0 0 20px currentColor;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .day-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .day-card:nth-child(1) { animation-delay: 0.1s; }
+        .day-card:nth-child(2) { animation-delay: 0.2s; }
+        .day-card:nth-child(3) { animation-delay: 0.3s; }
+        .day-card:nth-child(4) { animation-delay: 0.4s; }
+        .day-card:nth-child(5) { animation-delay: 0.5s; }
+        .day-card:nth-child(6) { animation-delay: 0.6s; }
+        .day-card:nth-child(7) { animation-delay: 0.7s; }
+    </style>
+
+
+    <div class="header">
+        <h1>CSDA</h1>
+        <h2>Computer Science and Data Analytics</h2>
+        <h3>2025-26 Timetable</h3>
+    </div>
+    
+    <div class="timetable-grid">
+        <div class="day-card monday">
+            <h3 class="day-title">Monday</h3>
+            <div class="class-item">
+                <div class="time-indicator"></div>
+                <div class="time-slot">8:00 - 9:55</div>
+                <span class="subject-tag cda105">CDA 105</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of Data Analytics</div>
+                </div>
+            </div>
+            <div class="class-item">
+                <div class="time-indicator"></div>
+                <div class="time-slot">1:00 - 1:55</div>
+                <span class="subject-tag cda107">CDA 107</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of English for Professionals</div>
+                </div>
+            </div>
+            <div class="class-item">
+                <div class="time-indicator"></div>
+                <div class="time-slot">2:00 - 4:55</div>
+                <span class="subject-tag cda103-lab">CDA 103 Lab</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of Computer Science Lab</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="day-card tuesday">
+            <h3 class="day-title">Tuesday</h3>
+            <div class="class-item">
+                <div class="time-indicator"></div>
+                <div class="time-slot">9:00 - 10:55</div>
+                <span class="subject-tag cda101">CDA 101</span>
+                <div class="class-details">
+                    <div class="class-name">Mathematics I</div>
+                </div>
+            </div>
+            <div class="class-item">
+                <div class="time-indicator"></div>
+                <div class="time-slot">1:00 - 1:55</div>
+                <span class="subject-tag cda107">CDA 107</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of English for Professionals</div>
+                </div>
+            </div>
+            <div class="class-item">
+                <div class="time-indicator"></div>
+                <div class="time-slot">3:00 - 4:55</div>
+                <span class="subject-tag cda103">CDA 103</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of Computer Science Theory</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="day-card wednesday">
+            <h3 class="day-title">Wednesday</h3>
+            <div class="class-item">
+                <div class="time-indicator"></div>
+                <div class="time-slot">8:00 - 9:55</div>
+                <span class="subject-tag cda105">CDA 105</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of Data Analytics</div>
+                </div>
+            </div>
+            <div class="class-item">
+                <div class="time-indicator"></div>
+                <div class="time-slot">1:00 - 1:55</div>
+                <span class="subject-tag cda107">CDA 107</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of English for Professionals</div>
+                </div>
+            </div>
+            <div class="class-item">
+                <div class="time-indicator"></div>
+                <div class="time-slot">3:00 - 4:55</div>
+                <span class="subject-tag cda103">CDA 103</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of Computer Science Theory</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="day-card thursday">
+            <h3 class="day-title">Thursday</h3>
+            <div class="class-item">
+                <div class="time-indicator"></div>
+                <div class="time-slot">2:00 - 2:55</div>
+                <span class="subject-tag cda107">CDA 107</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of English for Professionals</div>
+                </div>
+            </div>
+            <div class="class-item">
+                <div class="time-indicator"></div>
+                <div class="time-slot">3:00 - 4:55</div>
+                <span class="subject-tag cda103">CDA 103</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of Computer Science Theory</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="day-card friday">
+            <h3 class="day-title">Friday</h3>
+            <div class="no-classes">
+                No classes scheduled
+            </div>
+        </div>
+        
+        <div class="day-card saturday">
+            <h3 class="day-title">Saturday</h3>
+            <div class="class-item">
+                <div class="time-indicator"></div>
+                <div class="time-slot">9:00 - 10:55</div>
+                <span class="subject-tag cda101">CDA 101</span>
+                <div class="class-details">
+                    <div class="class-name">Mathematics I</div>
+                </div>
+            </div>
+            <div class="class-item">
+                <div class="time-indicator"></div>
+                <div class="time-slot">11:00 - 12:55</div>
+                <span class="subject-tag cda105-lab">CDA 105 Lab</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of Data Analytics Lab</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="day-card sunday">
+            <h3 class="day-title">Sunday</h3>
+            <div class="no-classes">
+                Holiday
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AICS Visual Timetable</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1b3a 50%, #2d1b4e 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899, #ef4444);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+        }
+        
+        .header h2 {
+            font-size: 1.5rem;
+            margin: 10px 0;
+            color: #c084fc;
+            font-weight: 500;
+        }
+        
+        .header h3 {
+            font-size: 1.2rem;
+            margin: 0;
+            color: #22d3ee;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .timetable-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .day-card {
+            background: rgba(30, 27, 75, 0.7);
+            backdrop-filter: blur(20px);
+            border: 3px solid;
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            min-height: 200px;
+        }
+        
+        .day-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .day-card:hover::before {
+            left: 100%;
+        }
+        
+        .day-card:hover {
+            transform: translateY(-8px) scale(1.03);
+        }
+        
+        /* Day-specific violet-fuchsia-rose cycling colors */
+        .monday { border-color: #8b5cf6; }
+        .tuesday { border-color: #ec4899; }
+        .wednesday { border-color: #ef4444; }
+        .thursday { border-color: #8b5cf6; }
+        .friday { border-color: #ec4899; }
+        .saturday { border-color: #ef4444; }
+        .sunday { border-color: #6b7280; }
+        
+        .monday:hover { border-color: #a855f7; box-shadow: 0 25px 50px rgba(139, 92, 246, 0.5); }
+        .tuesday:hover { border-color: #f472b6; box-shadow: 0 25px 50px rgba(236, 72, 153, 0.5); }
+        .wednesday:hover { border-color: #f87171; box-shadow: 0 25px 50px rgba(239, 68, 68, 0.5); }
+        .thursday:hover { border-color: #a855f7; box-shadow: 0 25px 50px rgba(139, 92, 246, 0.5); }
+        .friday:hover { border-color: #f472b6; box-shadow: 0 25px 50px rgba(236, 72, 153, 0.5); }
+        .saturday:hover { border-color: #f87171; box-shadow: 0 25px 50px rgba(239, 68, 68, 0.5); }
+        
+        .day-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .monday .day-title { color: #a855f7; }
+        .tuesday .day-title { color: #f472b6; }
+        .wednesday .day-title { color: #f87171; }
+        .thursday .day-title { color: #a855f7; }
+        .friday .day-title { color: #f472b6; }
+        .saturday .day-title { color: #f87171; }
+        .sunday .day-title { color: #9ca3af; }
+        
+        .day-card:hover .day-title {
+            transform: scale(1.05);
+            text-shadow: 0 0 20px currentColor;
+        }
+        
+        .class-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            padding: 12px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            border-left: 4px solid #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+        }
+        
+        .class-item:hover {
+            transform: translateX(8px) scale(1.02);
+            background: rgba(34, 197, 94, 0.2);
+        }
+        
+        .time-slot {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            background: #ec4899;
+            padding: 6px 12px;
+            border-radius: 8px;
+            margin-right: 12px;
+            min-width: 100px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .class-item:hover .time-slot {
+            background: #f472b6;
+            transform: scale(1.05);
+        }
+        
+        .subject-tag {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-right: 8px;
+            color: #374151;
+            background: #d1d5db;
+            transition: all 0.3s ease;
+        }
+        
+        .subject-tag:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .class-details {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .class-name {
+            font-weight: 600;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        
+        .no-classes {
+            text-align: center;
+            color: #94a3b8;
+            font-style: italic;
+            padding: 40px 20px;
+            background: rgba(148, 163, 184, 0.05);
+            border-radius: 12px;
+            border: 2px dashed #475569;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .timetable-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .day-card {
+                padding: 20px;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .day-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .day-card:nth-child(1) { animation-delay: 0.1s; }
+        .day-card:nth-child(2) { animation-delay: 0.2s; }
+        .day-card:nth-child(3) { animation-delay: 0.3s; }
+        .day-card:nth-child(4) { animation-delay: 0.4s; }
+        .day-card:nth-child(5) { animation-delay: 0.5s; }
+        .day-card:nth-child(6) { animation-delay: 0.6s; }
+        .day-card:nth-child(7) { animation-delay: 0.7s; }
+    </style>
+
+
+    <div class="header">
+        <h1>AICS</h1>
+        <h2>Artificial Intelligence and Cybersecurity</h2>
+        <h3>2025-26 Timetable</h3>
+    </div>
+    
+    <div class="timetable-grid">
+        <div class="day-card monday">
+            <h3 class="day-title">Monday</h3>
+            <div class="class-item">
+                <div class="time-slot">2:00 - 3:00</div>
+                <span class="subject-tag">CDA 107</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of English for Professionals</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="day-card tuesday">
+            <h3 class="day-title">Tuesday</h3>
+            <div class="class-item">
+                <div class="time-slot">2:00 - 3:00</div>
+                <span class="subject-tag">CDA 107</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of English for Professionals</div>
+                </div>
+            </div>
+            <div class="class-item">
+                <div class="time-slot">4:00 - 4:55</div>
+                <span class="subject-tag">CDA 103</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of Computer Science Theory</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="day-card wednesday">
+            <h3 class="day-title">Wednesday</h3>
+            <div class="class-item">
+                <div class="time-slot">10:00 - 12:55</div>
+                <span class="subject-tag">CDA 105</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of Data Analytics</div>
+                </div>
+            </div>
+            <div class="class-item">
+                <div class="time-slot">2:00 - 3:00</div>
+                <span class="subject-tag">CDA 107</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of English for Professionals</div>
+                </div>
+            </div>
+            <div class="class-item">
+                <div class="time-slot">4:00 - 4:55</div>
+                <span class="subject-tag">CDA 103</span>
+                <div class="class-details">
+                    <div class="class-name">Foundations of Computer Science</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="day-card thursday">
+            <h3 class="day-title">Thursday</h3>
+            <div class="class-item">
+                <div class="time-slot">9:00 - 10:55</div>
+                <span class="subject-tag">CDA 101</span>
+                <div class="class-details">
+                    <div class="class-name">Mathematics I</div>
+                </div>
+            </div>
+            <div class="class-item">
+                <div class="time-slot">3:00 - 4:55</div>
+                <span class="subject-tag">CDA 107</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of English for Professionals</div>
+                </div>
+            </div>
+            <div class="class-item">
+                <div class="time-slot">5:00 - 5:55</div>
+                <span class="subject-tag">CDA 103</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of Computer Science Theory</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="day-card friday">
+            <h3 class="day-title">Friday</h3>
+            <div class="class-item">
+                <div class="time-slot">8:00 - 9:55</div>
+                <span class="subject-tag">CDA 105</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of Data Analytics</div>
+                </div>
+            </div>
+            <div class="class-item">
+                <div class="time-slot">2:00 - 4:55</div>
+                <span class="subject-tag">CDA 103 Lab</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of Computer Science Lab</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="day-card saturday">
+            <h3 class="day-title">Saturday</h3>
+            <div class="class-item">
+                <div class="time-slot">11:00 - 12:55</div>
+                <span class="subject-tag">CDA 101</span>
+                <div class="class-details">
+                    <div class="class-name">Mathematics I</div>
+                </div>
+            </div>
+            <div class="class-item">
+                <div class="time-slot">2:00 - 3:55</div>
+                <span class="subject-tag">CDA 105</span>
+                <div class="class-details">
+                    <div class="class-name">Foundation of Data Analytics</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="day-card sunday">
+            <h3 class="day-title">Sunday</h3>
+            <div class="no-classes">
+                Holiday
+            </div>
+        </div>
+    </div>
+
+
+    
+                CA
+
+
+ <section id="calendar" class="card p-6 rounded-xl shadow-lg mb-8 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-cyan-500/10 to-blue-500/10"></div>
+        <div class="relative z-10">
+            <h2 class="text-3xl font-bold mb-4 bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">Academic Calendar (Autumn 2025)</h2>
+            <div class="overflow-x-auto rounded-lg border border-cyan-400/30 glass">
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-gradient-to-r from-emerald-600/20 to-cyan-600/20">
+                        <tr>
+                            <th class="p-4 font-semibold text-cyan-200 border-b border-cyan-400/20">Activity</th>
+                            <th class="p-4 font-semibold text-cyan-200 border-b border-cyan-400/20">Timeline</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-cyan-500/20">
+                        <tr class="bg-emerald-900/10 hover:bg-emerald-800/20 transition-all duration-300 group border-l-4 border-emerald-500/50 hover:border-emerald-400">
+                            <td class="p-4 text-emerald-100 group-hover:text-emerald-50 font-medium">Orientation, Induction &amp; LMS Training</td>
+                            <td class="p-4 text-cyan-300 group-hover:text-cyan-200 font-mono">14 August, 2025</td>
+                        </tr>
+                        <tr class="bg-cyan-900/10 hover:bg-cyan-800/20 transition-all duration-300 group border-l-4 border-cyan-500/50 hover:border-cyan-400">
+                            <td class="p-4 text-cyan-100 group-hover:text-cyan-50 font-medium">First Day of Instruction</td>
+                            <td class="p-4 text-emerald-300 group-hover:text-emerald-200 font-mono">18 August, 2025</td>
+                        </tr>
+                        <tr class="bg-blue-900/10 hover:bg-blue-800/20 transition-all duration-300 group border-l-4 border-blue-500/50 hover:border-blue-400">
+                            <td class="p-4 text-blue-100 group-hover:text-blue-50 font-medium">Assignment 1</td>
+                            <td class="p-4 text-cyan-300 group-hover:text-cyan-200 font-mono">Sep 4 - Sep 10, 2025</td>
+                        </tr>
+                        <tr class="bg-emerald-900/10 hover:bg-emerald-800/20 transition-all duration-300 group border-l-4 border-emerald-500/50 hover:border-emerald-400">
+                            <td class="p-4 text-emerald-100 group-hover:text-emerald-50 font-medium">Quiz 1</td>
+                            <td class="p-4 text-blue-300 group-hover:text-blue-200 font-mono">Sep 22 - Sep 28, 2025</td>
+                        </tr>
+                        <tr class="bg-cyan-900/10 hover:bg-cyan-800/20 transition-all duration-300 group border-l-4 border-cyan-500/50 hover:border-cyan-400">
+                            <td class="p-4 text-cyan-100 group-hover:text-cyan-50 font-medium">Assignment 2</td>
+                            <td class="p-4 text-emerald-300 group-hover:text-emerald-200 font-mono">Oct 9 - Oct 15, 2025</td>
+                        </tr>
+                        <tr class="bg-blue-900/10 hover:bg-blue-800/20 transition-all duration-300 group border-l-4 border-blue-500/50 hover:border-blue-400">
+                            <td class="p-4 text-blue-100 group-hover:text-blue-50 font-medium">Assignment 3</td>
+                            <td class="p-4 text-cyan-300 group-hover:text-cyan-200 font-mono">Oct 22 - Oct 28, 2025</td>
+                        </tr>
+                        <tr class="bg-emerald-900/10 hover:bg-emerald-800/20 transition-all duration-300 group border-l-4 border-emerald-500/50 hover:border-emerald-400">
+                            <td class="p-4 text-emerald-100 group-hover:text-emerald-50 font-medium">Quiz 2</td>
+                            <td class="p-4 text-blue-300 group-hover:text-blue-200 font-mono">Nov 5 - Nov 11, 2025</td>
+                        </tr>
+                        <tr class="bg-cyan-900/10 hover:bg-cyan-800/20 transition-all duration-300 group border-l-4 border-cyan-500/50 hover:border-cyan-400">
+                            <td class="p-4 text-cyan-100 group-hover:text-cyan-50 font-medium">Assignment 4</td>
+                            <td class="p-4 text-emerald-300 group-hover:text-emerald-200 font-mono">Nov 18 - Nov 22, 2025</td>
+                        </tr>
+                        <tr class="bg-blue-900/10 hover:bg-blue-800/20 transition-all duration-300 group border-l-4 border-blue-500/50 hover:border-blue-400">
+                            <td class="p-4 text-blue-100 group-hover:text-blue-50 font-medium">Last Day of Classes</td>
+                            <td class="p-4 text-cyan-300 group-hover:text-cyan-200 font-mono">24 Nov, 2025</td>
+                        </tr>
+                        <tr class="bg-emerald-900/10 hover:bg-emerald-800/20 transition-all duration-300 group border-l-4 border-emerald-500/50 hover:border-emerald-400">
+                            <td class="p-4 text-emerald-100 group-hover:text-emerald-50 font-medium">End Semester Exam (Online)</td>
+                            <td class="p-4 text-blue-300 group-hover:text-blue-200 font-mono">Dec 8 - Dec 19, 2025</td>
+                        </tr>
+                        <tr class="bg-cyan-900/10 hover:bg-cyan-800/20 transition-all duration-300 group border-l-4 border-cyan-500/50 hover:border-cyan-400">
+                            <td class="p-4 text-cyan-100 group-hover:text-cyan-50 font-medium">Declaration of Results</td>
+                            <td class="p-4 text-emerald-300 group-hover:text-emerald-200 font-mono">Dec 26, 2025</td>
+                        </tr>
+                        <tr class="bg-blue-900/10 hover:bg-blue-800/20 transition-all duration-300 group border-l-4 border-blue-500/50 hover:border-blue-400">
+                            <td class="p-4 text-blue-100 group-hover:text-blue-50 font-medium">Re-Examination / Supplementary Exam</td>
+                            <td class="p-4 text-cyan-300 group-hover:text-cyan-200 font-mono">Jan 5 - Jan 11, 2026</td>
+                        </tr>
+                        <tr class="bg-emerald-900/10 hover:bg-emerald-800/20 transition-all duration-300 group border-l-4 border-emerald-500/50 hover:border-emerald-400">
+                            <td class="p-4 text-emerald-100 group-hover:text-emerald-50 font-medium">Final Result Declaration</td>
+                            <td class="p-4 text-blue-300 group-hover:text-blue-200 font-mono">19 Jan, 2026</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    
+    <section id="progress" class="card bg-slate-800 p-6 rounded-xl shadow-lg mb-8">
+        <h2 class="text-3xl font-bold mb-6 text-slate-100">✨ Progress &amp; Timeline</h2>
+        <div class="relative pl-8 border-l-2 border-slate-700" id="timeline-container">
+            
+        </div>
+    </section>
+
+    
+    <section id="prep-plan" class="card bg-slate-800 p-6 rounded-xl shadow-lg mb-8">
+      <h2 class="text-3xl font-bold mb-1 text-slate-100">✨ AI-Powered Prep Plan</h2>
+      <p class="text-slate-400 mb-6">Let Gemini create a custom study plan for you.</p>
+      
+      <form id="plan-generator-form" class="flex items-center gap-4 p-4 bg-slate-800/50 border border-slate-700 rounded-lg">
+        <label for="study-days" class="font-semibold text-slate-300">How many days to prepare?</label>
+        <input type="number" id="study-days" value="3" min="1" max="14" class="bg-slate-700 text-slate-200 border border-slate-600 rounded-lg px-3 py-2 w-24 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        <button type="submit" class="bg-blue-600 text-white font-semibold px-5 py-2 rounded-lg hover:bg-blue-500 transition-colors flex items-center gap-2">
+          <i data-lucide="wand-2" class="w-5 h-5"></i> Generate Plan
+        </button>
+      </form>
+      
+      <div id="plan-output" class="mt-6">
+        
+      </div>
+       <div id="plan-loader" class="hidden justify-center items-center mt-6 flex-col gap-4">
+          <div class="loader"></div>
+          <p class="text-slate-400">Generating your custom plan...</p>
+      </div>
+    </section>
+
+    
+    <section id="materials" class="card bg-slate-800 p-6 rounded-xl shadow-lg mb-8">
+      <h2 class="text-3xl font-bold mb-4 text-slate-100">Study Materials</h2>
+      <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4 flex flex-col">
+          <h3 class="font-bold text-slate-200">CDA 101 — Mathematics-I</h3>
+          <ul class="text-sm text-slate-400 mt-2 flex-1 space-y-2">
+            <li><a href="pdfs/Calculus  Analytical Geometry_9e_ Thomas_Finney.pdf" class="text-blue-400 hover:underline">Calculus &amp; Analytical Geometry</a></li>
+            <li><a href="pdfs/Introduction to Probability Theory_3e_Hoel et. al.pdf" class="text-blue-400 hover:underline">Intro to Probability Theory</a></li>
+            <li><a href="pdfs/Probability_ Random Processes_3e_ Grimmett et. al.pdf" class="text-blue-400 hover:underline">Probability &amp; Random Processes</a></li>
+          </ul>
+        </div>
+        <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4 flex flex-col">
+          <h3 class="font-bold text-slate-200">CDA 103 — Foundation of CS</h3>
+           <ul class="text-sm text-slate-400 mt-2 flex-1 space-y-2">
+            <li><a href="pdfs/How to Solve it By Computer_ Dromey.pdf" class="text-blue-400 hover:underline">How to Solve it By Computer</a></li>
+            <li><a href="pdfs/Python Programming_3e _Dawson.pdf" class="text-blue-400 hover:underline">Python Programming</a></li>
+            <li><a href="pdfs/Python Workbook _Stephenson.pdf" class="text-blue-400 hover:underline">Python Workbook</a></li>
+          </ul>
+        </div>
+        <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4 flex flex-col">
+          <h3 class="font-bold text-slate-200">CDA 105 — Data Analytics</h3>
+           <ul class="text-sm text-slate-400 mt-2 flex-1 space-y-2">
+            <li><a href="pdfs/Python Data Science_ Handbook_ VanderPlas.pdf" class="text-blue-400 hover:underline">Python Data Science Handbook</a></li>
+            <li><a href="pdfs/Visual Display of Quantitative Information_2e_ Tufte.pdf" class="text-blue-400 hover:underline">Visual Display of Info</a></li>
+          </ul>
+        </div>
+        <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4 flex flex-col">
+          <h3 class="font-bold text-slate-200">CDA 107 — English for Professionals</h3>
+           <ul class="text-sm text-slate-400 mt-2 flex-1 space-y-2">
+            <li><a href="pdfs/English Grammar In Use_5e_ Murphy.pdf" class="text-blue-400 hover:underline">English Grammar In Use</a></li>
+            <li><a href="pdfs/Practical English Usage_4e_Swan.pdf" class="text-blue-400 hover:underline">Practical English Usage</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    
+    <section id="ai" class="card bg-slate-800 p-6 rounded-xl shadow-lg mb-8">
+      <h2 class="text-3xl font-bold mb-1 text-slate-100">AI Assistants</h2>
+      <p class="text-slate-400 mb-6">Click a subject to start a chat with a specialized AI assistant.</p>
+      <div class="flex gap-4 flex-wrap">
+        <button class="bg-blue-600 text-white font-semibold px-5 py-3 rounded-lg hover:bg-blue-500 transition-all shadow-lg hover:shadow-blue-500/40 transform hover:-translate-y-0.5 flex items-center gap-2" onclick="openChat('CDA 101 — Mathematics-I', 'math')"><i data-lucide="calculator" class="w-5 h-5"></i> Mathematics AI</button>
+        <button class="bg-blue-600 text-white font-semibold px-5 py-3 rounded-lg hover:bg-blue-500 transition-all shadow-lg hover:shadow-blue-500/40 transform hover:-translate-y-0.5 flex items-center gap-2" onclick="openChat('CDA 103 — Foundation of Computer Science', 'cs')"><i data-lucide="code" class="w-5 h-5"></i> Computer Science AI</button>
+        <button class="bg-blue-600 text-white font-semibold px-5 py-3 rounded-lg hover:bg-blue-500 transition-all shadow-lg hover:shadow-blue-500/40 transform hover:-translate-y-0.5 flex items-center gap-2" onclick="openChat('CDA 105 — Foundation of Data Analytics', 'da')"><i data-lucide="bar-chart-3" class="w-5 h-5"></i> Data Analytics AI</button>
+        <button class="bg-blue-600 text-white font-semibold px-5 py-3 rounded-lg hover:bg-blue-500 transition-all shadow-lg hover:shadow-blue-500/40 transform hover:-translate-y-0.5 flex items-center gap-2" onclick="openChat('CDA 107 — Foundation of English for Professionals', 'eng')"><i data-lucide="pen-square" class="w-5 h-5"></i> English AI</button>
+      </div>
+    </section>
+
+    
+    <footer class="text-center text-slate-400 text-sm py-8">
+      <p class="text-lg font-bold text-slate-300">Made by <span class="text-blue-400 tracking-wider">SHIVAM</span></p>
+      <div class="mt-4 flex justify-center items-center space-x-6">
+        <a href="https://www.instagram.com/iitians_wallah?igsh=aGYxdzVicDM3bW9n" target="_blank" class="text-slate-400 hover:text-blue-400 transition-colors p-2 rounded-full hover:bg-slate-700">
+          <i data-lucide="instagram" class="w-6 h-6"></i>
+        </a>
+        <a href="https://chat.whatsapp.com/Dr7oY7jPlnkBmPbaFCCn3F?mode=ac_t" target="_blank" class="text-slate-400 hover:text-blue-400 transition-colors p-2 rounded-full hover:bg-slate-700">
+          <i data-lucide="whatsApp" class="w-6 h-6"></i>
+        </a>
+      </div>
+    </footer>
+  
+
+  
+  <div id="chat-modal-backdrop" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden opacity-0" onclick="closeChat()"></div>
+  <div id="chat-modal" class="fixed inset-0 m-auto w-full max-w-2xl h-[85vh] bg-slate-800 rounded-xl shadow-2xl flex flex-col z-50 hidden opacity-0 scale-95 border border-slate-700">
+    <div class="flex justify-between items-center p-4 border-b border-slate-700">
+      <h3 id="chat-subject" class="text-lg font-bold text-slate-200">AI Assistant</h3>
+      <button onclick="closeChat()" class="text-slate-400 hover:text-white p-1 rounded-full hover:bg-slate-700"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-slate-900">
+      
+    </div>
+    <div class="p-4 border-t border-slate-700 bg-slate-800">
+      <form id="chat-form" class="flex gap-2">
+        <button type="button" id="new-problem-btn" class="bg-slate-700 text-slate-200 font-semibold px-4 py-2 rounded-lg hover:bg-slate-600 transition-colors flex items-center gap-2">✨ New Problem</button>
+        <input id="chat-input" class="w-full px-4 py-2 bg-slate-700 text-slate-200 border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Ask a question..." autocomplete="off">
+        <button type="submit" class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-500 transition-colors flex items-center justify-center"><i data-lucide="send" class="w-5 h-5"></i></button>
+      </form>
+    </div>
+  </div>
+
+
+  <script>
+    lucide.createIcons();
+    
+    // --- Mobile Menu Toggle ---
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    // --- UI Elements ---
+    const chatModalBackdrop = document.getElementById('chat-modal-backdrop');
+    const chatModal = document.getElementById('chat-modal');
+    const chatSubject = document.getElementById('chat-subject');
+    const chatMessages = document.getElementById('chat-messages');
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const newProblemBtn = document.getElementById('new-problem-btn');
+    const planGeneratorForm = document.getElementById('plan-generator-form');
+    const planOutput = document.getElementById('plan-output');
+    const planLoader = document.getElementById('plan-loader');
+    const studyDaysInput = document.getElementById('study-days');
+
+    // --- State ---
+    let activeSubjectKey = null;
+    let chatHistory = [];
+
+    // --- System Prompts ---
+    const systemPrompts = {
+      'math': "You are a helpful teaching assistant for CDA 101: Mathematics-I. Answer clearly and show step-by-step when relevant. Keep explanations short and include 1 example if possible.",
+      'cs': "You are a helpful teaching assistant for CDA 103: Foundation of Computer Science. Explain programming and algorithm concepts simply with code examples when relevant. Keep answers concise.",
+      'da': "You are a helpful teaching assistant for CDA 105: Foundation of Data Analytics. Explain data concepts, stats, and practical steps for cleaning/visualizing data in short actionable steps.",
+      'eng': "You are a helpful teaching assistant for CDA 107: Foundation of English for Professionals. Focus on grammar, writing clarity, and professional communication tips."
+    };
+
+    // --- Chat Functions ---
+    function openChat(title, subjectKey) {
+      activeSubjectKey = subjectKey;
+      chatSubject.textContent = title;
+      chatMessages.innerHTML = '';
+      chatHistory = [];
+
+      chatModalBackdrop.classList.remove('hidden');
+      chatModal.classList.remove('hidden');
+      setTimeout(() => {
+        chatModalBackdrop.classList.remove('opacity-0');
+        chatModal.classList.remove('opacity-0', 'scale-95');
+      }, 10);
+
+      const welcomeMessage = `Hello! I'm your ${title} assistant. How can I help you with this subject?`;
+      appendAIMessage(welcomeMessage);
+      chatHistory.push({ role: "model", parts: [{ text: welcomeMessage }] });
+    }
+
+    function closeChat() {
+      chatModalBackdrop.classList.add('opacity-0');
+      chatModal.classList.add('opacity-0', 'scale-95');
+      setTimeout(() => {
+        chatModalBackdrop.classList.add('hidden');
+        chatModal.classList.add('hidden');
+      }, 300);
+    }
+
+    function appendUserMessage(text) {
+      chatMessages.innerHTML += `<div class="flex justify-end mb-3">
+        <div class="bg-blue-600 text-white rounded-lg py-2 px-4 max-w-[80%]">
+          ${text}
+        </div>
+      </div>`;
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function appendAIMessage(html) {
+      const thinkingBubble = chatMessages.querySelector('.thinking');
+      if (thinkingBubble) {
+        thinkingBubble.remove();
+      }
+      chatMessages.innerHTML += `<div class="flex justify-start mb-3">
+        <div class="bg-slate-700 text-slate-200 rounded-lg py-2 px-4 max-w-[80%] border border-slate-600">
+          ${html.replace(/\n/g, '<br>')}
+        </div>
+      </div>`;
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    function showThinkingIndicator() {
+      chatMessages.innerHTML += `<div class="flex justify-start mb-3 thinking">
+        <div class="bg-slate-700 rounded-lg py-2 px-4 border border-slate-600">
+          <div class="flex items-center space-x-1">
+            <span class="w-2 h-2 bg-slate-400 rounded-full animate-pulse" style="animation-delay: 0s;"></span>
+            <span class="w-2 h-2 bg-slate-400 rounded-full animate-pulse" style="animation-delay: 0.2s;"></span>
+            <span class="w-2 h-2 bg-slate-400 rounded-full animate-pulse" style="animation-delay: 0.4s;"></span>
+          </div>
+        </div>
+      </div>`;
+       chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    chatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const userMessage = chatInput.value.trim();
+      if (!userMessage) return;
+
+      appendUserMessage(userMessage);
+      chatInput.value = '';
+      showThinkingIndicator();
+
+      chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
+
+      try {
+        const aiReply = await callGemini(activeSubjectKey, chatHistory);
+        chatHistory.push({ role: "model", parts: [{ text: aiReply }] });
+        appendAIMessage(aiReply);
+      } catch (err) {
+        appendAIMessage(`Sorry, something went wrong: ${err.message}`);
+      }
+    });
+    
+    // --- New Feature: Practice Problem Generator ---
+    newProblemBtn.addEventListener('click', async () => {
+        const subjectName = chatSubject.textContent;
+        const prompt = `Generate a practice problem for a first-year university student studying ${subjectName}.`;
+        
+        appendUserMessage("✨ Generate a new practice problem for me.");
+        showThinkingIndicator();
+
+        const tempHistory = [{ role: "user", parts: [{ text: prompt }] }];
+
+        try {
+            const aiReply = await callGemini(activeSubjectKey, tempHistory);
+            appendAIMessage(aiReply);
+        } catch (err) {
+            appendAIMessage(`Sorry, I couldn't generate a problem: ${err.message}`);
+        }
+    });
+
+    // --- New Feature: AI Prep Plan Generator ---
+    planGeneratorForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const days = studyDaysInput.value;
+        if (!days || days < 1) {
+            planOutput.innerHTML = `<p class="text-red-400">Please enter a valid number of days.</p>`;
+            return;
+        }
+
+        planLoader.style.display = 'flex';
+        planOutput.innerHTML = '';
+
+        const prompt = `Create a ${days}-day study plan for a first-year university student taking four subjects: Mathematics-I (Calculus, Probability), Foundation of CS (Python basics), Data Analytics (Data lifecycle, EDA), and English for Professionals (Grammar, Writing). Allocate study time reasonably across the subjects each day.`;
+
+        const planSchema = {
+            type: "ARRAY",
+            items: {
+                type: "OBJECT",
+                properties: {
+                    day: { type: "NUMBER" },
+                    tasks: {
+                        type: "ARRAY",
+                        items: {
+                            type: "OBJECT",
+                            properties: {
+                                subject: { type: "STRING" },
+                                duration: { type: "STRING" },
+                                topic: { type: "STRING" }
+                            },
+                            required: ["subject", "duration", "topic"]
+                        }
+                    }
+                },
+                required: ["day", "tasks"]
+            }
+        };
+
+        try {
+            const planData = await callGeminiWithSchema(prompt, planSchema);
+            renderPlan(planData);
+        } catch (err) {
+            planOutput.innerHTML = `<p class="text-red-400">Error generating plan: ${err.message}</p>`;
+        } finally {
+            planLoader.style.display = 'none';
+        }
+    });
+
+    function renderPlan(planData) {
+        if (!planData || !Array.isArray(planData)) {
+            planOutput.innerHTML = `<p class="text-red-400">Could not generate a valid plan structure. Please try again.</p>`;
+            return;
+        }
+        let html = '<div class="grid md:grid-cols-3 gap-6">';
+        planData.forEach(day => {
+            html += `
+                <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-5">
+                    <h3 class="font-bold text-lg mb-3 text-slate-200">Day ${day.day}</h3>
+                    <ul class="space-y-2 text-slate-400 list-none">`;
+            day.tasks.forEach(task => {
+                html += `<li><strong>${task.subject} (${task.duration}):</strong> ${task.topic}</li>`;
+            });
+            html += `</ul></div>`;
+        });
+        html += '</div>';
+        planOutput.innerHTML = html;
+    }
+
+
+    // --- Gemini API Calls (FIXED & ROBUST) ---
+    async function callWithBackoff(apiUrl, payload, retries = 3, delay = 1000) {
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                if (retries > 0 && response.status >= 500) {
+                    await new Promise(res => setTimeout(res, delay));
+                    return callWithBackoff(apiUrl, payload, retries - 1, delay * 2);
+                }
+                throw new Error(`API Error ${response.status}: ${await response.text()}`);
+            }
+            return response.json();
+        } catch (error) {
+            if (retries > 0) {
+                await new Promise(res => setTimeout(res, delay));
+                return callWithBackoff(apiUrl, payload, retries - 1, delay * 2);
+            }
+            throw error;
+        }
+    }
+
+    async function callGemini(subjectKey, history) {
+        const payload = {
+            contents: history,
+            systemInstruction: {
+                parts: [{ text: systemPrompts[subjectKey] || "You are a helpful assistant." }]
+            }
+        };
+        const apiKey = "AIzaSyBXDY2iC-tcGyCkZY_tB-vCpKqVh2tC8MA";
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+        
+        const result = await callWithBackoff(url, payload);
+        const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+        
+        if (!text) {
+            if (result.candidates?.[0]?.finishReason) {
+                return `Response blocked. Reason: ${result.candidates[0].finishReason}`;
+            }
+            throw new Error("Received an empty response from the API.");
+        }
+        return text;
+    }
+    
+    async function callGeminiWithSchema(prompt, schema) {
+        const payload = {
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+                responseMimeType: "application/json",
+                responseSchema: schema
+            }
+        };
+        const apiKey = "AIzaSyBXDY2iC-tcGyCkZY_tB-vCpKqVh2tC8MA";
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+        
+        const result = await callWithBackoff(url, payload);
+        const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+        
+        if (!jsonText) {
+            throw new Error("Received an empty JSON response from the API.");
+        }
+        
+        try {
+            return JSON.parse(jsonText);
+        } catch (e) {
+            console.error("Failed to parse JSON response:", jsonText);
+            throw new Error("The AI returned an invalid data format. Please try again.");
+        }
+    }
+
+    // --- Timeline Generation ---
+    document.addEventListener('DOMContentLoaded', () => {
+        const timelineContainer = document.getElementById('timeline-container');
+        const now = new Date('2025-08-16T12:00:00'); // Set a fixed "current" date for demonstration
+
+        const events = [
+            { name: 'Orientation & Training', start: '2025-08-14', end: '2025-08-14' },
+            { name: 'First Day of Instruction', start: '2025-08-18', end: '2025-08-18' },
+            { name: 'Assignment 1', start: '2025-09-04', end: '2025-09-10' },
+            { name: 'Quiz 1', start: '2025-09-22', end: '2025-09-28' },
+            { name: 'Assignment 2', start: '2025-10-09', end: '2025-10-15' },
+            { name: 'Assignment 3', start: '2025-10-22', end: '2025-10-28' },
+            { name: 'Quiz 2', start: '2025-11-05', end: '2025-11-11' },
+            { name: 'Assignment 4', start: '2025-11-18', end: '2025-11-22' },
+            { name: 'Last Day of Classes', start: '2025-11-24', end: '2025-11-24' },
+            { name: 'End Semester Exam', start: '2025-12-08', end: '2025-12-19' },
+            { name: 'Results Declaration', start: '2025-12-26', end: '2025-12-26' },
+        ];
+
+        events.forEach(event => {
+            const startDate = new Date(event.start + 'T00:00:00');
+            const endDate = new Date(event.end + 'T23:59:59');
+            let status = 'future';
+            if (now > endDate) {
+                status = 'completed';
+            } else if (now >= startDate && now <= endDate) {
+                status = 'current';
+            }
+
+            const item = document.createElement('div');
+            item.className = `timeline-item relative pb-8 ${status}`;
+            item.innerHTML = `
+                <div class="timeline-dot"></div>
+                <div class="ml-4">
+                    <p class="font-semibold text-slate-200">${event.name}</p>
+                    <p class="text-sm text-slate-400">${formatDateRange(startDate, endDate)}</p>
+                </div>
+            `;
+            timelineContainer.appendChild(item);
+        });
+    });
+
+    function formatDateRange(start, end) {
+        const options = { month: 'short', day: 'numeric' };
+        if (start.toDateString() === end.toDateString()) {
+            return start.toLocaleDateString('en-US', { ...options, year: 'numeric' });
+        } else {
+            return `${start.toLocaleDateString('en-US', options)} - ${end.toLocaleDateString('en-US', options)}, ${end.getFullYear()}`;
+        }
+    }
+
+  </script>
